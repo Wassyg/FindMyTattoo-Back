@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var options = { connectTimeoutMS: 5000, useNewUrlParser: true };
 var cloudinary = require('cloudinary');
 var fs = require('fs');
+var bcrypt = require('bcryptjs');
 
 
 var dbuser='fitzfoufou';
@@ -31,7 +32,7 @@ var artistSchema = mongoose.Schema({
     artistAddress: String,
     artistAddressLat: Number,
     artistAddressLon: Number,
-    email:String,
+    artistEmail:String,
     artistPhotoLink : String,
     artistStyleList : [String],
 });
@@ -82,7 +83,7 @@ var ArtistDB = [
     artistNickname : "Bichon",
     artistCompanyName : "The Golden Rabbit Tattoo",
     artistAddress: "16 Rue Geoffroy-Marie, 75009 Paris",
-    email: "bichontatoueur@gmail.com",
+    artistEmail: "bichontatoueur@gmail.com",
     artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
     artistStyleList : ["Japopnais", "Postmodern"],
     },
@@ -90,7 +91,7 @@ var ArtistDB = [
    artistNickname : "Princesse Madness",
    artistCompanyName : "Lez'art du Corps - Paris",
    artistAddress: "10 Rue Gambey, 75011 Paris, France, 75011 Paris",
-   email: "princess-madness@hotmail.com",
+   artistEmail: "princess-madness@hotmail.com",
    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
    artistStyleList : ["Tribal", "OldSchool"],
  }
@@ -172,7 +173,7 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 //// ROUTES ////
 
 // Route to get all artists
-router.get('/artists', function(req, res, next) {
+router.get('/artists', function(req, res) {
   ArtistModel.find(
     function (err, artists) {
         console.log(artists);
@@ -182,7 +183,7 @@ router.get('/artists', function(req, res, next) {
 });
 
 // Route to get all tattoos
-router.get('/tattoos', function(req, res, next) {
+router.get('/tattoos', function(req, res) {
   TattooModel.find(
     function (err, tattoos) {
         console.log(tattoos);
@@ -191,8 +192,119 @@ router.get('/tattoos', function(req, res, next) {
   )
 });
 
+// Route to create new user
+var salt = "$2a$10$s7Re1cyDCCMTQeRTJiLUSO"; //To crypt the user password
+router.post('/signup', function(req, res) {
+  var hash = bcrypt.hashSync(req.body.userPassword, salt);
+  var newUser = new UserModel ({
+    userFirstName: req.body.userFirstName,
+    userLastName: req.body.userLastName,
+    userEmail: req.body.userEmail,
+    userPassword:hash,
+    userTelephone : "",
+    userTattooDescription: "",
+    userTattooHeight : 0,
+    userTattooWidth: 0,
+    userTattooStyleList: [],
+    userTattooZone : "",
+    userImportedPhotosLinks: [],
+    userFavoriteTattoo : [],
+    userFavoriteArtist : [],
+    });
+  newUser.save(
+    function (error, user) {
+      console.log(user);
+      if (error){
+        res.json({signup : false})
+      } else {
+        res.json({
+          signup : true,
+          result : user,
+        })
+      }
+    }
+  );
+});
+
+// Route to log in new user
+router.post('/signin', function(req, res) {
+  var hash = bcrypt.hashSync(req.body.userPassword, salt);
+  UserModel.find(
+    {userEmail:req.body.userEmail, userPassword: hash},
+    function (err, users) {
+      if (users.length>0) {
+        res.json({
+          signin : true,
+          result : user,
+        })
+      } else{
+        res.json({signin : false})
+      }
+    }
+  )
+});
+
+// Route to update user favorite tattoos when he likes a tattoo
+router.put('/userfavoritetattoo', function(req, res) {
+  var newFavoriteTattoo = {
+    tattooPhotoLink: req.query.favTattooPhotoLink,
+    tattooStyleList: req.query.favTattooStyleList,
+    artistID:req.query.favArtistID,
+  };
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {$addToSet: {userFavoriteTattoo: newFavoriteTattoo}},
+    function (err, raw) {
+      if(err){
+        res.json({favTattoo : false})
+      } else{
+        res.json({
+          favTattoo: true
+        });
+      }
+    }
+  )
+});
+
+// Route to update user favorite artists when he likes an artist
+router.put('/userfavoritetattoo', function(req, res) {
+  var newFavoriteArtist = {
+    artistNickname: req.query.favArtistNickname,
+    artistCompanyName: req.query.favArtistCompanyName,
+    artistAddress: req.query.favArtistAddress,
+    artistAddressLat: req.query.favArtistAddressLat,
+    artistAddressLon: req.query.favArtistAddressLon,
+    artistEmail:req.query.favArtistEmail,
+    artistPhotoLink : req.query.favArtistPhotoLink,
+    artistStyleList : req.query.favArtistStyleList,
+  };
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {$addToSet: {userFavoriteArtist: newFavoriteArtist}},
+    function (err, raw) {
+      if(err){
+        res.json({favArtist : false})
+      } else{
+        res.json({
+          favArtist: true
+        });
+      }
+    }
+  )
+});
+
 // Initial route
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
+});
+
+//Route to get users - just for testing
+router.get('/users', function(req, res) {
+  UserModel.find(
+    function (err, users) {
+        console.log(users);
+        res.json(users);
+    }
+  )
 });
 module.exports = router;
