@@ -350,6 +350,23 @@ router.put('/userprojectinformation', function(req, res) {
   )
 });
 
+//Route to create a new lead from user to artist
+router.post('/newlead', function(req, res) {
+  var today = new Date();
+  var newLead = new LeadModel ({
+    dateLead: today,
+    userID: req.body.user_id,
+    artistID: req.body.artist_id,
+  })
+  newLead.save(
+    function (error, lead) {
+      console.log(lead);
+      res.json(lead)
+    }
+  )
+});
+
+
 // Initial route
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
