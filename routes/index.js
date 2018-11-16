@@ -140,7 +140,7 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 //   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
 //     console.log(result.secure_url, error);
 //     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bec5a385d12cb6484f788fe';
+//     TattooDB[j].artistID = '5bedb2149081e52c98f7b826';
 //     TattooDB[j].tattooStyleList = ["Japopnais","Postmodern"];
 //     var newTattoo = new TattooModel (TattooDB[j]);
 //     newTattoo.save(
@@ -158,7 +158,7 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 //   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
 //     console.log(result.secure_url, error);
 //     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bec59adb061125c447856ed';
+//     TattooDB[j].artistID = '5bedb2159081e52c98f7b827';
 //     TattooDB[j].tattooStyleList = ["Tribal","OldSchool"];
 //     var newTattoo = new TattooModel (TattooDB[j]);
 //     newTattoo.save(
@@ -176,8 +176,7 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 router.get('/artists', function(req, res) {
   ArtistModel.find(
     function (err, artists) {
-        console.log(artists);
-        res.json(artists);
+      res.json(artists);
     }
   )
 });
@@ -186,8 +185,7 @@ router.get('/artists', function(req, res) {
 router.get('/tattoos', function(req, res) {
   TattooModel.find(
     function (err, tattoos) {
-        console.log(tattoos);
-        res.json(tattoos);
+      res.json(tattoos);
     }
   )
 });
@@ -295,7 +293,7 @@ router.put('/userfavoriteartist', function(req, res) {
 
 //Route to get all information of a specific user
 router.get('/user', function(req, res) {
-  ArtisModel.findOne(
+  UserModel.findOne(
     {_id: req.query.user_id},
     function (err, user) {
       if (err){
@@ -324,6 +322,29 @@ router.get('/artist', function(req, res) {
           artist : true,
           result : artist
         });
+      }
+    }
+  )
+});
+
+// Route to update user project description from form
+router.put('/userprojectinformation', function(req, res) {
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {
+      userTelephone : req.query.userTelephone,
+      userTattooDescription: req.query.userTattooDescription,
+      userTattooHeight : req.query.userTattooHeight,
+      userTattooWidth: req.query.userTattooWidth,
+      userTattooStyleList: req.query.userTattooStyleList,
+      userTattooZone : req.query.userTattooZone,
+      userImportedPhotosLinks: req.query.userImportedPhotosLinks,
+    },
+    function (err, raw) {
+      if(err){
+        res.json({newProjectInformation : false})
+      } else{
+        res.json({newProjectInformation: true});
       }
     }
   )
