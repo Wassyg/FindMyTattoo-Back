@@ -267,7 +267,7 @@ router.put('/userfavoritetattoo', function(req, res) {
 });
 
 // Route to update user favorite artists when he likes an artist
-router.put('/userfavoritetattoo', function(req, res) {
+router.put('/userfavoriteartist', function(req, res) {
   var newFavoriteArtist = {
     artistNickname: req.query.favArtistNickname,
     artistCompanyName: req.query.favArtistCompanyName,
@@ -287,6 +287,42 @@ router.put('/userfavoritetattoo', function(req, res) {
       } else{
         res.json({
           favArtist: true
+        });
+      }
+    }
+  )
+});
+
+//Route to get all information of a specific user
+router.get('/user', function(req, res) {
+  ArtisModel.findOne(
+    {_id: req.query.user_id},
+    function (err, user) {
+      if (err){
+        res.json({user : false})
+      } else {
+        console.log(user);
+        res.json({
+          user : true,
+          result : user
+        });
+      }
+    }
+  )
+});
+
+//Route to get all information of a specific artist
+router.get('/artist', function(req, res) {
+  ArtistModel.findOne(
+    {_id: req.query.artist_id},
+    function (err, artist) {
+      if (err){
+        res.json({artist : false})
+      } else {
+        console.log(artist);
+        res.json({
+          artist : true,
+          result : artist
         });
       }
     }
