@@ -35,6 +35,7 @@ var artistSchema = mongoose.Schema({
     artistEmail:String,
     artistPhotoLink : String,
     artistStyleList : [String],
+    // artistNote : Number,
 });
 var ArtistModel = mongoose.model('artists', artistSchema);
 
@@ -86,6 +87,7 @@ var ArtistDB = [
     artistEmail: "bichontatoueur@gmail.com",
     artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
     artistStyleList : ["Japopnais", "Postmodern"],
+    // artistNote : 4.4,
     },
  {
    artistNickname : "Princesse Madness",
@@ -94,6 +96,7 @@ var ArtistDB = [
    artistEmail: "princess-madness@hotmail.com",
    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
    artistStyleList : ["Tribal", "OldSchool"],
+   // artistNote : 4.6,
  }
 ];
 
@@ -177,6 +180,16 @@ router.get('/artists', function(req, res) {
   ArtistModel.find(
     function (err, artists) {
       res.json(artists);
+    }
+  )
+});
+
+// Route to get all tattoos from specific artist
+router.get('/tattoosfromartist', function(req, res) {
+  TattooModel.find(
+    {artistID: req.query.artistID },
+    function (err, tattoos) {
+      res.json(tattoos);
     }
   )
 });
