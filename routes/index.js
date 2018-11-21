@@ -302,7 +302,7 @@ router.post('/signin', function(req, res) {
 });
 
 // Route to update user favorite tattoos when he likes a tattoo
-router.put('/userfavoritetattoo', function(req, res) {
+router.put('/userliketattoo', function(req, res) {
   var newFavoriteTattoo = {
     tattooPhotoLink: req.query.favTattooPhotoLink,
     tattooStyleList: req.query.favTattooStyleList,
@@ -313,18 +313,31 @@ router.put('/userfavoritetattoo', function(req, res) {
     {$addToSet: {userFavoriteTattoo: newFavoriteTattoo}},
     function (err, raw) {
       if(err){
-        res.json({favTattoo : false})
+        res.json({likeTattoo : false})
       } else{
-        res.json({
-          favTattoo: true
-        });
+        res.json({likeTattoo: true});
+      }
+    }
+  )
+});
+
+// Route to update a user favorite tattoos when he dislikes a tattoo
+router.put('/userdisliketattoo', function(req, res) {
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {$pull: {userFavoriteTattoo: {_id : req.query.tattoo_id}}},
+    function (err, raw) {
+      if(err){
+        res.json({dislikeTattoo : false})
+      } else{
+        res.json({dislikeTattoo: true});
       }
     }
   )
 });
 
 // Route to update user favorite artists when he likes an artist
-router.put('/userfavoriteartist', function(req, res) {
+router.put('/userlikeartist', function(req, res) {
   var newFavoriteArtist = {
     artistNickname: req.query.favArtistNickname,
     artistCompanyName: req.query.favArtistCompanyName,
@@ -340,11 +353,24 @@ router.put('/userfavoriteartist', function(req, res) {
     {$addToSet: {userFavoriteArtist: newFavoriteArtist}},
     function (err, raw) {
       if(err){
-        res.json({favArtist : false})
+        res.json({likeArtist : false})
       } else{
-        res.json({
-          favArtist: true
-        });
+        res.json({likeArtist: true});
+      }
+    }
+  )
+});
+
+// Route to update user favorite artists when he dislikes an artist
+router.put('/userdislikeartist', function(req, res) {
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {$pull: {userFavoriteArtist: {_id : req.query.artist_id}}},
+    function (err, raw) {
+      if(err){
+        res.json({dislikeArtist : false})
+      } else{
+        res.json({dislikeArtist: true});
       }
     }
   )
