@@ -204,52 +204,82 @@ router.get('/tattoos', function(req, res) {
 });
 
 // Route to create new user
-var salt = "$2a$10$s7Re1cyDCCMTQeRTJiLUSO"; //To crypt the user password
+var salt = "$2a$10$rx6.LcM0Eycd3JfZuRVUsO"; //To crypt the user password
 router.post('/signup', function(req, res) {
-  var hash = bcrypt.hashSync(req.body.userPassword, salt);
-  var newUser = new UserModel ({
-    userFirstName: req.body.userFirstName,
-    userLastName: req.body.userLastName,
-    userEmail: req.body.userEmail,
-    userPassword:hash,
-    userTelephone : "",
-    userTattooDescription: "",
-    userTattooHeight : 0,
-    userTattooWidth: 0,
-    userTattooStyleList: [],
-    userTattooZone : "",
-    userImportedPhotosLinks: [],
-    userFavoriteTattoo : [],
-    userFavoriteArtist : [],
-    });
-  newUser.save(
-    function (error, user) {
-      console.log(user);
-      if (error){
-        res.json({signup : false})
-      } else {
+  UserModel.findOne(
+    {userEmail: req.body.userEmail},
+    function (err, user) {
+      if (user) {
+        console.log(user);
         res.json({
-          signup : true,
-          result : user,
-        })
+          signup : false,
+          result : "alreadyInDB",
+        });
+      } else{
+        var hash = bcrypt.hashSync(req.body.userPassword, salt);
+        var newUser = new UserModel ({
+          userFirstName: req.body.userFirstName,
+          userLastName: req.body.userLastName,
+          userEmail: req.body.userEmail,
+          userPassword: hash,
+          userTelephone : "",
+          userTattooDescription: "",
+          userTattooHeight : 0,
+          userTattooWidth: 0,
+          userTattooStyleList: [],
+          userTattooZone : "",
+          userImportedPhotosLinks: [],
+          userFavoriteTattoo : [],
+          userFavoriteArtist : [],
+          });
+        newUser.save(
+          function (err, user) {
+            if (err){
+              res.json({
+                signup : false,
+                result : err
+              })
+            } else {
+              res.json({
+                signup : true,
+                result : user,
+              })
+            }
+          }
+        );
       }
     }
-  );
+  )
 });
 
 // Route to log in new user
 router.post('/signin', function(req, res) {
   var hash = bcrypt.hashSync(req.body.userPassword, salt);
-  UserModel.find(
-    {userEmail:req.body.userEmail, userPassword: hash},
-    function (err, users) {
-      if (users.length>0) {
+  UserModel.findOne(
+    {userEmail: req.body.userEmail, userPassword: hash},
+    function (err, user) {
+      if (user) {
         res.json({
           signin : true,
           result : user,
-        })
+        });
       } else{
-        res.json({signin : false})
+        UserModel.findOne(
+          {userEmail: req.body.userEmail},
+          function (err, user) {
+            if (user) {
+              res.json({
+                signup : false,
+                result : "wrongPassword",
+              });
+            } else {
+              res.json({
+                signin : false,
+                result: err
+              });
+            }
+          }
+        )
       }
     }
   )
