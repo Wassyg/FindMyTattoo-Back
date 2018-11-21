@@ -23,6 +23,22 @@ cloudinary.config({
   api_secret: '0qzSisIetVmja-LecM_n0PiH-CQ'
 });
 
+//// USEFUL FUNCTIONS ////
+
+//Function to shuffle the list of tattoos and artists -- unbiased shuffle algorithm is the Fisher-Yates (aka Knuth) Shuffle : https://github.com/coolaj86/knuth-shuffle
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+
 //// SETUP OF DATABASE SCHEMA ////
 
 // Artist DB
@@ -189,7 +205,7 @@ router.get('/tattoosfromartist', function(req, res) {
   TattooModel.find(
     {artistID: req.query.artistID },
     function (err, tattoos) {
-      res.json(tattoos);
+      res.json(shuffle(tattoos));
     }
   )
 });
@@ -198,7 +214,7 @@ router.get('/tattoosfromartist', function(req, res) {
 router.get('/tattoos', function(req, res) {
   TattooModel.find(
     function (err, tattoos) {
-      res.json(tattoos);
+      res.json(shuffle(tattoos));
     }
   )
 });
