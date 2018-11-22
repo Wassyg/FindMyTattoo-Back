@@ -51,7 +51,7 @@ var artistSchema = mongoose.Schema({
     artistEmail:String,
     artistPhotoLink : String,
     artistStyleList : [String],
-    // artistNote : Number,
+    artistNote : Number,
 });
 var ArtistModel = mongoose.model('artists', artistSchema);
 
@@ -71,11 +71,7 @@ var userSchema = mongoose.Schema({
     userPassword:String,
     userTelephone : String,
     userTattooDescription: String,
-    userTattooHeight : Number,
-    userTattooWidth: Number,
-    userTattooStyleList: [String],
-    userTattooZone : String,
-    userImportedPhotosLinks: [String],
+    userAvailability : String,
     userFavoriteTattoo : [tattooSchema],
     userFavoriteArtist : [artistSchema],
 });
@@ -86,6 +82,9 @@ var leadSchema = mongoose.Schema({
     dateLead: Number,
     userID: String,
     artistID: String,
+    artistID: String,
+    userAvailability : String,
+    userTattooDescription : String,
 });
 var LeadModel = mongoose.model('leads', leadSchema);
 
@@ -103,7 +102,7 @@ var ArtistDB = [
     artistEmail: "bichontatoueur@gmail.com",
     artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
     artistStyleList : ["Japopnais", "Postmodern"],
-    // artistNote : 4.4,
+    artistNote : 4.4,
     },
  {
    artistNickname : "Princesse Madness",
@@ -112,7 +111,7 @@ var ArtistDB = [
    artistEmail: "princess-madness@hotmail.com",
    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
    artistStyleList : ["Tribal", "OldSchool"],
-   // artistNote : 4.6,
+   artistNote : 4.6,
  }
 ];
 
@@ -240,11 +239,7 @@ router.post('/signup', function(req, res) {
           userPassword: hash,
           userTelephone : "",
           userTattooDescription: "",
-          userTattooHeight : 0,
-          userTattooWidth: 0,
-          userTattooStyleList: [],
-          userTattooZone : "",
-          userImportedPhotosLinks: [],
+          userAvailability : "",
           userFavoriteTattoo : [],
           userFavoriteArtist : [],
           });
@@ -412,41 +407,34 @@ router.get('/artist', function(req, res) {
   )
 });
 
-// Route to update user project description from form
-router.put('/userprojectinformation', function(req, res) {
-  UserModel.updateOne(
-    {_id: req.query.user_id},
-    {
-      userTelephone : req.query.userTelephone,
-      userTattooDescription: req.query.userTattooDescription,
-      userTattooHeight : req.query.userTattooHeight,
-      userTattooWidth: req.query.userTattooWidth,
-      userTattooStyleList: req.query.userTattooStyleList,
-      userTattooZone : req.query.userTattooZone,
-      userImportedPhotosLinks: req.query.userImportedPhotosLinks,
-    },
-    function (err, raw) {
-      if(err){
-        res.json({newProjectInformation : false})
-      } else{
-        res.json({newProjectInformation: true});
-      }
-    }
-  )
-});
 
 //Route to create a new lead from user to artist
 router.post('/newlead', function(req, res) {
+  //Create a new lead
   var today = new Date();
   var newLead = new LeadModel ({
     dateLead: today,
     userID: req.body.user_id,
     artistID: req.body.artist_id,
+    userAvailability : req.body.userAvailability,
+    userTattooDescription : req.body.userTattooDescription,
   })
   newLead.save(
     function (error, lead) {
       console.log(lead);
       res.json(lead)
+    }
+  )
+  //Update user information to add telephone
+  UserModel.updateOne(
+    {_id: req.query.user_id},
+    {userTelephone: req.body.userTelephone},
+    function (err, raw) {
+      if(err){
+        res.json({updateUser : false})
+      } else{
+        res.json({updateUser: true});
+      }
     }
   )
 });
