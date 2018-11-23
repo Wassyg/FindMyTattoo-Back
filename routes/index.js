@@ -46,6 +46,7 @@ var artistSchema = mongoose.Schema({
     artistNickname: String,
     artistCompanyName: String,
     artistAddress: String,
+    artistDescription: String,
     artistAddressLat: Number,
     artistAddressLon: Number,
     artistEmail:String,
@@ -90,105 +91,6 @@ var leadSchema = mongoose.Schema({
 });
 var LeadModel = mongoose.model('leads', leadSchema);
 
-
-
-
-//// INITIALISATION OF DATABASES ////
-
-// Artist DB
-var ArtistDB = [
-  {
-    artistNickname : "Bichon",
-    artistCompanyName : "The Golden Rabbit Tattoo",
-    artistAddress: "16 Rue Geoffroy-Marie, 75009 Paris",
-    artistEmail: "bichontatoueur@gmail.com",
-    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
-    artistStyleList : ["Japopnais", "Postmodern"],
-    artistNote : 4.4,
-    },
- {
-   artistNickname : "Princesse Madness",
-   artistCompanyName : "Lez'art du Corps - Paris",
-   artistAddress: "10 Rue Gambey, 75011 Paris, France, 75011 Paris",
-   artistEmail: "princess-madness@hotmail.com",
-   artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
-   artistStyleList : ["Tribal", "OldSchool"],
-   artistNote : 4.6,
- }
-];
-
-
-
-//// Enrichissement de la base de données tatoueurs avec coordonnées GPS ////
-// To learn more on how to convert addresses to coordinates, check this simple website : https://dzone.com/articles/mapboxs-api-to-geocode-data-to-get-location-inform
-
-
-var ArtistDBAddress=ArtistDB.map(a=>a.artistAddress);
-
-// for (var i = 0; i < ArtistDBAddress.length; i++) {
-//   var j=0;
-//   var k=0;
-//   request('https://api.mapbox.com/geocoding/v5/mapbox.places/'+ ArtistDBAddress[i]+'.json?access_token=pk.eyJ1IjoiZml0emZvdWZvdSIsImEiOiJjam9nMGlkMXowOTkzM3h0N3E5am45b3hxIn0.IBgvst88EucTyqijWWnpSg', function(error, response, body){
-//     addressInfo=JSON.parse(body);
-//     ArtistDB[j].artistAddressLat = addressInfo.features[0].center[1];
-//     ArtistDB[j].artistAddressLon = addressInfo.features[0].center[0];
-//     console.log(ArtistDB[j].artistComputerPhotoLink);
-//     cloudinary.v2.uploader.upload(ArtistDB[j].artistComputerPhotoLink, function(error, result){
-//       console.log(result.secure_url, error);
-//       ArtistDB[k].artistPhotoLink = result.secure_url;
-//       var newArtist = new ArtistModel (ArtistDB[k]);
-//       newArtist.save(
-//         function (error, artist) {
-//           console.log(artist);
-//         }
-//       );
-//       k++;
-//     });
-//     j++;
-//   });
-// }
-
-// Tattoo DB
-var TattooPhotoDBBichon = fs.readdirSync('../FindMyTattooFront/public/tatouagesBichon/');
-var TattooPhotoDBPrincesse = fs.readdirSync('../FindMyTattooFront/public/tatouagesPrincess/');
-
-var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.length).fill({});
-
-//Bichon tattoos
-// for (var i = 0; i < TattooPhotoDBBichon.length; i++) {
-//   var j =0;
-//   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
-//     console.log(result.secure_url, error);
-//     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bedb2149081e52c98f7b826';
-//     TattooDB[j].tattooStyleList = ["Japopnais","Postmodern"];
-//     var newTattoo = new TattooModel (TattooDB[j]);
-//     newTattoo.save(
-//       function (error, tattoo) {
-//         console.log(tattoo);
-//       }
-//     );
-//     j++;
-//   });
-// }
-
-//Princesse tattoos
-// for (var i = 0; i < TattooPhotoDBPrincesse.length; i++) {
-//   var j =0;
-//   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
-//     console.log(result.secure_url, error);
-//     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bedb2159081e52c98f7b827';
-//     TattooDB[j].tattooStyleList = ["Tribal","OldSchool"];
-//     var newTattoo = new TattooModel (TattooDB[j]);
-//     newTattoo.save(
-//       function (error, tattoo) {
-//         console.log(tattoo);
-//       }
-//     );
-//     j++;
-//   });
-// }
 
 //// ROUTES ////
 
@@ -442,7 +344,6 @@ router.post('/newlead', function(req, res) {
     }
   )
 });
-
 
 // Initial route
 router.get('/', function(req, res) {
