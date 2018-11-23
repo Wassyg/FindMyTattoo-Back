@@ -46,6 +46,7 @@ var artistSchema = mongoose.Schema({
     artistNickname: String,
     artistCompanyName: String,
     artistAddress: String,
+    artistDescription: String,
     artistAddressLat: Number,
     artistAddressLon: Number,
     artistEmail:String,
@@ -98,19 +99,21 @@ var ArtistDB = [
   {
     artistNickname : "Bichon",
     artistCompanyName : "The Golden Rabbit Tattoo",
-    artistAddress: "16 Rue Geoffroy-Marie, 75009 Paris",
+    artistAddress: "10 Rue Gambey, 75011 Paris, France, 75011 Paris",
+    artistDescription: "Bichon tatoue depuis 10 ans. Il a commencé à l'âge de 14 ans avec sa grande soeur. Depuis il est passionné de tatouages.",
     artistEmail: "bichontatoueur@gmail.com",
     artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
-    artistStyleList : ["Japopnais", "Postmodern"],
+    artistStyleList : ["DotWork", "FineLine", "BlackWork"],
     artistNote : 4.4,
     },
  {
-   artistNickname : "Princesse Madness",
+   artistNickname : "Princess Madness",
    artistCompanyName : "Lez'art du Corps - Paris",
-   artistAddress: "10 Rue Gambey, 75011 Paris, France, 75011 Paris",
+   artistAddress: "16 Rue Geoffroy-Marie, 75009 Paris",
+   artistDescription: "Princess Madness s'est d'abord lancée dans la mode. Elle aime le style cartoon et découvrir des belles personnalités.",
    artistEmail: "princess-madness@hotmail.com",
    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
-   artistStyleList : ["Tribal", "OldSchool"],
+   artistStyleList : ["Cartoon", "NewSchool", "Postmodern"],
    artistNote : 4.6,
  }
 ];
@@ -158,8 +161,8 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 //   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
 //     console.log(result.secure_url, error);
 //     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bedb2149081e52c98f7b826';
-//     TattooDB[j].tattooStyleList = ["Japopnais","Postmodern"];
+//     TattooDB[j].artistID = '5bf6db1e237f035fa0b0a7e6';
+//     TattooDB[j].tattooStyleList = ["DotWork", "FineLine", "BlackWork"];
 //     var newTattoo = new TattooModel (TattooDB[j]);
 //     newTattoo.save(
 //       function (error, tattoo) {
@@ -173,11 +176,11 @@ var TattooDB = new Array(TattooPhotoDBBichon.length+ TattooPhotoDBPrincesse.leng
 //Princesse tattoos
 // for (var i = 0; i < TattooPhotoDBPrincesse.length; i++) {
 //   var j =0;
-//   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesBichon/'+TattooPhotoDBBichon[i], function(error, result){
+//   cloudinary.v2.uploader.upload('../FindMyTattooFront/public/tatouagesPrincess/'+TattooPhotoDBPrincesse[i], function(error, result){
 //     console.log(result.secure_url, error);
 //     TattooDB[j].tattooPhotoLink = result.secure_url;
-//     TattooDB[j].artistID = '5bedb2159081e52c98f7b827';
-//     TattooDB[j].tattooStyleList = ["Tribal","OldSchool"];
+//     TattooDB[j].artistID = '5bf6db1e237f035fa0b0a7e7';
+//     TattooDB[j].tattooStyleList = ["Cartoon", "NewSchool", "Postmodern"];
 //     var newTattoo = new TattooModel (TattooDB[j]);
 //     newTattoo.save(
 //       function (error, tattoo) {
