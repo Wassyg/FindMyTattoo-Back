@@ -59,7 +59,9 @@ var ArtistModel = mongoose.model('artists', artistSchema);
 var tattooSchema = mongoose.Schema({
     tattooPhotoLink: String,
     tattooStyleList: [String],
-    artistID:String,
+    artistID: String,
+    tattoo_id: String,
+
 });
 var TattooModel = mongoose.model('tattoos', tattooSchema);
 
@@ -298,13 +300,15 @@ router.post('/signin', function(req, res) {
 
 // Route to update user favorite tattoos when he likes a tattoo
 router.put('/userliketattoo', function(req, res) {
+  console.log(req.body);
   var newFavoriteTattoo = {
-    tattooPhotoLink: req.query.favTattooPhotoLink,
-    tattooStyleList: req.query.favTattooStyleList,
-    artistID:req.query.favArtistID,
+    tattooPhotoLink: req.body.favTattooPhotoLink,
+    tattooStyleList: req.body.favTattooStyleList,
+    artistID: req.body.favArtistID,
+    tattoo_id: req.body.idPhotoSelected,
   };
   UserModel.updateOne(
-    {_id: req.query.user_id},
+    {_id: req.body.user_id},
     {$addToSet: {userFavoriteTattoo: newFavoriteTattoo}},
     function (err, raw) {
       if(err){
@@ -319,8 +323,8 @@ router.put('/userliketattoo', function(req, res) {
 // Route to update a user favorite tattoos when he dislikes a tattoo
 router.put('/userdisliketattoo', function(req, res) {
   UserModel.updateOne(
-    {_id: req.query.user_id},
-    {$pull: {userFavoriteTattoo: {_id : req.query.tattoo_id}}},
+    {_id: req.body.user_id},
+    {$pull: {userFavoriteTattoo: {tattoo_id : req.body.idPhotoSelected}}},
     function (err, raw) {
       if(err){
         res.json({dislikeTattoo : false})
