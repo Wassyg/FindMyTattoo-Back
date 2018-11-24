@@ -240,17 +240,16 @@ router.put('/userdisliketattoo', function(req, res) {
 // Route to update user favorite artists when he likes an artist
 router.put('/userlikeartist', function(req, res) {
   var newFavoriteArtist = {
-    artistNickname: req.query.favArtistNickname,
-    artistCompanyName: req.query.favArtistCompanyName,
-    artistAddress: req.query.favArtistAddress,
-    artistAddressLat: req.query.favArtistAddressLat,
-    artistAddressLon: req.query.favArtistAddressLon,
-    artistEmail:req.query.favArtistEmail,
-    artistPhotoLink : req.query.favArtistPhotoLink,
-    artistStyleList : req.query.favArtistStyleList,
+    artistNickname: req.body.favArtistNickname,
+    artistCompanyName: req.body.favArtistCompanyName,
+    artistAddress: req.body.favArtistAddress,
+    artistDescription : req.body.favArtistDescription,
+    artistPhotoLink : req.body.favArtistPhotoLink,
+    artistStyleList : req.body.favArtistStyleList,
+    artistNote : req.body.favArtistNote,
   };
   UserModel.updateOne(
-    {_id: req.query.user_id},
+    {_id: req.body.user_id},
     {$addToSet: {userFavoriteArtist: newFavoriteArtist}},
     function (err, raw) {
       if(err){
@@ -265,8 +264,8 @@ router.put('/userlikeartist', function(req, res) {
 // Route to update user favorite artists when he dislikes an artist
 router.put('/userdislikeartist', function(req, res) {
   UserModel.updateOne(
-    {_id: req.query.user_id},
-    {$pull: {userFavoriteArtist: {_id : req.query.artist_id}}},
+    {_id: req.body.user_id},
+    {$pull: {userFavoriteArtist: {_id : req.body.artist_id}}},
     function (err, raw) {
       if(err){
         res.json({dislikeArtist : false})
