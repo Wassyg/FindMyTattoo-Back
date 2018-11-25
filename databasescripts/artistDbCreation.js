@@ -144,4 +144,6 @@ async function createArtistDB() {
   enrichingArtistDB(ArtistDB);
 }
 
-createArtistDB();
+////// TO LAUNCH THE CREATION OF DATABASE : UNCOMMENT THE LINE BELOW /////
+
+// createArtistDB();

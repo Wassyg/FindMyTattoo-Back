@@ -118,7 +118,7 @@ router.get('/tattoosfromartist', function(req, res) {
 router.get('/tattoos', function(req, res) {
   TattooModel.find(
     function (err, tattoos) {
-      res.json(shuffle(tattoos));
+      res.json(tattoos);
     }
   )
 });
@@ -358,6 +358,16 @@ router.post('/newlead', function(req, res) {
 // Initial route
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
+});
+
+//Route to delete all tattoos - just for testing
+router.delete('/deletetattoos', function(req,res){
+  TattooModel.remove(
+    {},
+    function(error){
+      res.json({result: "ok"})
+    }
+  )
 });
 
 //Route to get users - just for testing
