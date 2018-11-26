@@ -337,20 +337,23 @@ router.post('/newlead', function(req, res) {
   })
   newLead.save(
     function (error, lead) {
-      console.log(lead);
-      res.json(lead)
-    }
-  )
-  //Update user information to add telephone
-  UserModel.updateOne(
-    {_id: req.query.user_id},
-    {userTelephone: req.body.userTelephone},
-    function (err, raw) {
-      if(err){
-        res.json({updateUser : false})
-      } else{
-        res.json({updateUser: true});
-      }
+      UserModel.updateOne(
+        {_id: req.body.user_id},
+        {userTelephone: req.body.userTelephone},
+        function (err, raw) {
+          if(err){
+            res.json({
+              updateUser : false,
+              result : lead
+            })
+          } else{
+            res.json({
+              updateUser: true,
+              result : lead
+            });
+          }
+        }
+      )
     }
   )
 });
