@@ -118,7 +118,7 @@ router.get('/tattoosfromartist', function(req, res) {
 router.get('/tattoos', function(req, res) {
   TattooModel.find(
     function (err, tattoos) {
-      res.json(tattoos);
+      res.json(shuffle(tattoos));
     }
   )
 });
