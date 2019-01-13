@@ -7,8 +7,8 @@ var fs = require('fs');
 var bcrypt = require('bcryptjs');
 
 var dbuser='fitzfoufou';
-var dbpassword='lacapsule1';
-mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds039301.mlab.com:39301/findmytattoo',
+var dbpassword='findmytattoo1';
+mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds149414.mlab.com:49414/findmytattoo',
     options,
     function(err) {
      console.log(err);

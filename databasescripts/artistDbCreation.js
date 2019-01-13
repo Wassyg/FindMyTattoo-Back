@@ -7,8 +7,8 @@ var fs = require('fs');
 var bcrypt = require('bcryptjs');
 
 var dbuser='fitzfoufou';
-var dbpassword='lacapsule1';
-mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds039301.mlab.com:39301/findmytattoo',
+var dbpassword='findmytattoo1';
+mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds149414.mlab.com:49414/findmytattoo',
     options,
     function(err) {
      console.log(err);
@@ -45,7 +45,7 @@ var ArtistDB = [
     artistAddress: "10 Rue Gambey, 75011 Paris, France, 75011 Paris",
     artistDescription: "Bichon tatoue depuis 10 ans. Il a commencé à l'âge de 14 ans avec sa grande soeur. Depuis il est passionné de tatouages.",
     artistEmail: "bichontatoueur@gmail.com",
-    artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
+    artistComputerPhotoLink : "../../FindMyTattooFront/public/avatarsTatoueurs/11201563_749803451831654_737090053_a.jpg",
     artistStyleList : ["DotWork", "FineLine", "BlackWork"],
     artistNote : 5,
     },
@@ -55,7 +55,7 @@ var ArtistDB = [
    artistAddress: "16 Rue Geoffroy-Marie, 75009 Paris",
    artistDescription: "Princess Madness s'est d'abord lancée dans la mode. Elle aime le style cartoon et découvrir des belles personnalités.",
    artistEmail: "princess-madness@hotmail.com",
-   artistComputerPhotoLink : "../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
+   artistComputerPhotoLink : "../../FindMyTattooFront/public/avatarsTatoueurs/41450515_1897257143642841_5668628696324374528_n.jpg",
    artistStyleList : ["Cartoon", "NewSchool", "Postmodern"],
    artistNote : 5,
  }
@@ -115,6 +115,7 @@ var enrichingArtistDB = async function(artistDatabase){
       artistDatabase[i].artistAddressLat = addressInfo.features[0].center[1];
       artistDatabase[i].artistAddressLon = addressInfo.features[0].center[0];
       cloudinary.v2.uploader.upload(artistDatabase[i].artistComputerPhotoLink, {public_id: "artists/artist_"+i}, function(error, result){
+        console.log(artistDatabase[i].artistComputerPhotoLink);
         console.log(result.secure_url, error);
         artistDatabase[i].artistPhotoLink = result.secure_url;
         console.log(artistDatabase[i]);
@@ -146,4 +147,4 @@ async function createArtistDB() {
 
 ////// TO LAUNCH THE CREATION OF DATABASE : UNCOMMENT THE LINE BELOW /////
 
-// createArtistDB();
+createArtistDB();

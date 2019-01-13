@@ -9,8 +9,8 @@ var bcrypt = require('bcryptjs');
 
 
 var dbuser='fitzfoufou';
-var dbpassword='lacapsule1';
-mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds039301.mlab.com:39301/findmytattoo',
+var dbpassword='findmytattoo1';
+mongoose.connect('mongodb://'+dbuser+':'+dbpassword+'@ds149414.mlab.com:49414/findmytattoo',
     options,
     function(err) {
      console.log(err);
@@ -383,3 +383,16 @@ router.get('/users', function(req, res) {
   )
 });
 module.exports = router;
+
+/////// MINIMAL TEST ///////
+// 1. On home page, scroll down and check that you can see tattoo images
+// 2. Click on one of the tattoo and check that you can see
+    // The tattoo image
+    // Information on the artist
+    // Other images of the same artist when you scroll down
+// 3. Click on like the tattoo or the artist and check that a window pops up asking you to log in
+// 4. Try signing in or logging in
+// 5. Click again on a tattoo and like the tattoo and the artist
+// 6. Click on the Moodboard (button top right corner) and check that you can see the tattoo and the artist you liked in the relevant tabs
+// 7. Try clicking on "Contact" an artist and check that a window pops up asking you 3 questions
+// 8. Go to my inbox mail and check if I received a mail with the relevant information
